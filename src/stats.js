@@ -14,5 +14,33 @@
  * @returns {Record<string, GenreStats>} ключ — назва жанру
  */
 export function genreStats(shows) {
-  throw new Error('Not implemented');
+  const aggregated = {};
+
+  for (const show of shows) {
+    for (const genre of show.genres) {
+      if (!aggregated[genre]) {
+        aggregated[genre] = { count: 0, sum: 0, ratedCount: 0 };
+      }
+
+      aggregated[genre].count += 1;
+
+      if (show.rating !== null) {
+        aggregated[genre].sum += show.rating;
+        aggregated[genre].ratedCount += 1;
+      }
+    }
+  }
+  const result = {};
+
+  for (const genre in aggregated) {
+    const { count, sum, ratedCount } = aggregated[genre];
+    let averageRating = null;
+
+    if (ratedCount > 0) {
+      averageRating = Number((sum / ratedCount).toFixed(1));
+    }
+
+    result[genre] = { count, averageRating };
+  }
+  return result;
 }
