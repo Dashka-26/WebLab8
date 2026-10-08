@@ -15,6 +15,21 @@
  * @param {FilterOptions} [options]
  * @returns {Show[]}
  */
-export function filterShows(shows, options) {
-  throw new Error('Not implemented');
+export function filterShows(shows, { query, genre, minRating } = {}) {
+  const cleanQ = query?.trim().toLowerCase() || '';
+  return shows.filter(show => {
+    if (cleanQ && !show.name.toLowerCase().includes(cleanQ)) {
+      return false;
+    }
+
+    if (genre && !show.genres.includes(genre)) {
+      return false;
+    }
+
+    if (minRating && (show.rating === null || show.rating < minRating)) {
+      return false;
+    }
+
+    return true;
+  })
 }
